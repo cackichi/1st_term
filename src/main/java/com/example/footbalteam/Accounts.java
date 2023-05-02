@@ -1,0 +1,31 @@
+package com.example.footbalteam;
+
+public class Accounts {
+    private String login, password;
+
+    public Accounts(String login, String password) {
+        this.login = login;
+        this.password = password;
+    }
+
+    @Override
+    public String toString() {
+        return getLogin() + ";" + getPassword();
+    }
+
+    public String getLogin() {
+        return login;
+    }
+
+    public void setLogin(String login) {
+        this.login = login;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+}

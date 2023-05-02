@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="480.0" prefWidth="720.0" style="-fx-background-color: #fcba03;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.footbalteam.TaskController">
+   <children>
+      <TableView fx:id="table_result" layoutY="200.0" prefHeight="280.0" prefWidth="371.0">
+        <columns>
+          <TableColumn fx:id="number_1" prefWidth="22.399993896484375" text="№" />
+          <TableColumn fx:id="fullName_1" prefWidth="129.60000610351562" text="ФИО" />
+            <TableColumn fx:id="goals_1" prefWidth="35.20001220703125" text="Голы" />
+            <TableColumn fx:id="assists_1" prefWidth="64.0" text="Передачи" />
+            <TableColumn fx:id="result_1" prefWidth="116.0" text="Результативность" />
+        </columns>
+      </TableView>
+      <TableView fx:id="table_red_cards" layoutX="380.0" layoutY="200.0" prefHeight="280.0" prefWidth="340.0">
+         <columns>
+            <TableColumn fx:id="number_2" prefWidth="26.4000244140625" text="№" />
+            <TableColumn fx:id="fullName_2" prefWidth="164.0" text="ФИО" />
+            <TableColumn fx:id="redCards_2" prefWidth="146.4000244140625" text="Красные карточки" />
+         </columns>
+      </TableView>
+      <Button fx:id="backButton" layoutX="582.0" layoutY="14.0" mnemonicParsing="false" onAction="#backUp" prefHeight="26.0" prefWidth="124.0" style="-fx-background-color: c99502;" text="Вернуться назад" />
+      <Label layoutX="171.0" layoutY="27.0" text="Индивидуальное задание">
+         <font>
+            <Font size="32.0" />
+         </font>
+      </Label>
+      <Label layoutX="59.0" layoutY="152.0" text="Результативные игроки">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </Label>
+      <Label layoutX="415.0" layoutY="152.0" text="Оштрафованные игроки">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </Label>
+   </children>
+</AnchorPane>
