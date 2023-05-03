@@ -2,9 +2,11 @@ package com.example.footbalteam;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.Optional;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -13,6 +15,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import javafx.util.converter.LocalDateStringConverter;
 
 
@@ -384,6 +387,20 @@ public class TableController {
             stage.setTitle("Таблица результативности");
             stage.setScene(new Scene(pr));
             stage.show();
+
+            stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+                @Override
+                public void handle(WindowEvent windowEvent) {
+                    Alert closeAlert = new Alert(Alert.AlertType.WARNING, "Внимание", ButtonType.OK, ButtonType.CANCEL);
+                    closeAlert.setTitle("Внимание!");
+                    closeAlert.setHeaderText("Закрытие приложения");
+                    closeAlert.setContentText("Вы действительно хотите закрыть приложение?");
+                    Optional<ButtonType> result = closeAlert.showAndWait();
+                    if(result.get() == ButtonType.OK){
+                        stage.close();
+                    } else windowEvent.consume();
+                }
+            } );
         } else {
             // Диалоговое окно "Потеря данных"
             Alert saveTrouble = new Alert(Alert.AlertType.WARNING,"Warning", ButtonType.OK, ButtonType.CANCEL);
@@ -409,6 +426,20 @@ public class TableController {
                 stage.setTitle("Таблица результативности");
                 stage.setScene(new Scene(pr));
                 stage.show();
+
+                stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+                    @Override
+                    public void handle(WindowEvent windowEvent) {
+                        Alert closeAlert = new Alert(Alert.AlertType.WARNING, "Внимание", ButtonType.OK, ButtonType.CANCEL);
+                        closeAlert.setTitle("Внимание!");
+                        closeAlert.setHeaderText("Закрытие приложения");
+                        closeAlert.setContentText("Вы действительно хотите закрыть приложение?");
+                        Optional<ButtonType> result = closeAlert.showAndWait();
+                        if(result.get() == ButtonType.OK){
+                            stage.close();
+                        } else windowEvent.consume();
+                    }
+                } );
             } else saveTrouble.close();
             // Иначе, диалоговое окно закрывается
         }
