@@ -1,14 +1,17 @@
 package com.example.footbalteam;
 
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 import java.io.*;
+import java.util.Optional;
 
 public class SignInController {
 
@@ -47,12 +50,26 @@ public class SignInController {
                 stage.setTitle("Таблица игроков");
                 stage.setScene(new Scene(pr));
                 stage.show();
+
+                stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+                    @Override
+                    public void handle(WindowEvent windowEvent) {
+                        Alert closeAlert = new Alert(Alert.AlertType.WARNING, "Внимание", ButtonType.OK, ButtonType.CANCEL);
+                        closeAlert.setTitle("Внимание!");
+                        closeAlert.setHeaderText("Закрытие приложения");
+                        closeAlert.setContentText("Вы действительно хотите закрыть приложение?");
+                        Optional<ButtonType> result = closeAlert.showAndWait();
+                        if(result.get() == ButtonType.OK){
+                            stage.close();
+                        } else windowEvent.consume();
+                    }
+                } );
             } else call++;
         }
         if(call == length){
             Alert authAlert = new Alert(Alert.AlertType.ERROR);
             authAlert.setTitle("Ошибка авторизации");
-            authAlert.setContentText("Такие логин и пароль не найдены");
+            authAlert.setContentText("Такие логин и пароль не найдены\nПовторите попытку");
             authAlert.showAndWait();
         }
     }
@@ -72,5 +89,19 @@ public class SignInController {
         stage.setTitle("Регистрация");
         stage.setScene(new Scene(pr));
         stage.show();
+
+        stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent windowEvent) {
+                Alert closeAlert = new Alert(Alert.AlertType.WARNING, "Внимание", ButtonType.OK, ButtonType.CANCEL);
+                closeAlert.setTitle("Внимание!");
+                closeAlert.setHeaderText("Закрытие приложения");
+                closeAlert.setContentText("Вы действительно хотите закрыть приложение?");
+                Optional<ButtonType> result = closeAlert.showAndWait();
+                if(result.get() == ButtonType.OK){
+                    stage.close();
+                } else windowEvent.consume();
+            }
+        } );
     }
 }

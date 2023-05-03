@@ -1,14 +1,17 @@
 package com.example.footbalteam;
 
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 import java.io.*;
+import java.util.Optional;
 
 public class SignUpController {
 
@@ -39,7 +42,7 @@ public class SignUpController {
             BufferedWriter bw;
             Accounts account1 = new Accounts(login_field.getText(), password_field.getText());
             for(Accounts account2: list){
-                if(account1.getLogin().equals(account2.getLogin()) || account1.getPassword().equals(account2.getPassword()))
+                if(account1.getLogin().equals(account2.getLogin()))
                     call++;
             }
             if(call == 0) {
@@ -61,7 +64,7 @@ public class SignUpController {
             } else {
                 Alert exist = new Alert(Alert.AlertType.ERROR);
                 exist.setTitle("Ошибка регистрации");
-                exist.setContentText("Такие пароль или логин уже существуют");
+                exist.setContentText("Такой логин уже существует");
                 exist.showAndWait();
                 password_field.clear();
                 passwordConfirm_field.clear();
@@ -90,5 +93,19 @@ public class SignUpController {
         stage.setTitle("Авторизация");
         stage.setScene(new Scene(pr));
         stage.show();
+
+        stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent windowEvent) {
+                Alert closeAlert = new Alert(Alert.AlertType.WARNING, "Внимание", ButtonType.OK, ButtonType.CANCEL);
+                closeAlert.setTitle("Внимание!");
+                closeAlert.setHeaderText("Закрытие приложения");
+                closeAlert.setContentText("Вы действительно хотите закрыть приложение?");
+                Optional<ButtonType> result = closeAlert.showAndWait();
+                if(result.get() == ButtonType.OK){
+                    stage.close();
+                } else windowEvent.consume();
+            }
+        } );
     }
 }
