@@ -17,6 +17,8 @@ import javafx.util.converter.LocalDateStringConverter;
 
 
 public class TableController {
+
+    //******************** СОЗДАНИЕ И НАИМЕНОВАНИЕ СТОЛБЦОВ ********************
     @FXML
     private TableColumn<FootballPlayers, Integer> assists;
     @FXML
@@ -30,7 +32,15 @@ public class TableController {
     @FXML
     private TableColumn<FootballPlayers, Integer> number;
     @FXML
+    private TableColumn<FootballPlayers, Integer> yellowCards;
+    @FXML
     private TableColumn<FootballPlayers, Integer> redCards;
+
+    //******************** СОЗДАНИЕ И НАИМЕНОВАНИЕ ТАБЛИЦЫ ********************
+    @FXML
+    private TableView<FootballPlayers> table_football_players;
+
+    //******************** СОЗДАНИЕ И НАИМЕНОВАНИЕ КНОПОК ********************
     @FXML
     private Button saveButton;
     @FXML
@@ -43,14 +53,14 @@ public class TableController {
     private Button stopButton;
     @FXML
     private Button individualButton;
-    @FXML
-    private TableView<FootballPlayers> table_football_players;
-    @FXML
-    private TableColumn<FootballPlayers, Integer> yellowCards;
+
+    //******************** СОХДАНИЕ И НАИМЕНОВАНИЕ ВСПЛЫВАЮЩИХ СПИСКОВ ********************
     @FXML
     private ComboBox<String> comboSort;
     @FXML
     private ComboBox<String> comboFilter;
+
+    //******************** СОЗДАНИЕ И НАИМЕНОВАНИЕ ТЕКСТОВЫХ ПОЛЕЙ ********************
     @FXML
     private TextField fullName_field;
     @FXML
@@ -68,19 +78,21 @@ public class TableController {
     @FXML
     private TextField findFilter;
 
-    //ObservableList - список на основе ArrayList.
+    //******************** СОЗДАНИЕ СПИСКОВ ИГРОКОВ ********************
+    // ObservableList - список на основе ArrayList.
     // Интерфейс ObservableList помимо интерфейса List наследует ещё интерфейс Observable,
     // в котором определены методы addListener() и removeListener() для того, чтобы можно было ловить события
     // (для ObservableList это события при изменении списка).
-    private ObservableList<FootballPlayers> list = FXCollections.observableArrayList();
-    private ObservableList<FootballPlayers> example = FXCollections.observableArrayList();
+    private ObservableList<FootballPlayers> footballPlayers = FXCollections.observableArrayList();
+    private final ObservableList<FootballPlayers> example = FXCollections.observableArrayList();
 
-    //Этот метод вызывается автоматически при запуске
+    //******************** МЕТОД, КОТОРЫЙ ВЫЗЫВАЕТСЯ ПРИ ЗАПУСКЕ ОКНА ********************
     @FXML
     void initialize() {
         stopButton.setVisible(false);
         saveButton.setDisable(true);
 
+        //******************** ? ********************
         dateOfBirth.setCellFactory(TextFieldTableCell.forTableColumn(new LocalDateStringConverter()));
 
         number.setCellValueFactory(new PropertyValueFactory<>("number"));
@@ -92,11 +104,12 @@ public class TableController {
         yellowCards.setCellValueFactory(new PropertyValueFactory<>("yellowCards"));
         redCards.setCellValueFactory(new PropertyValueFactory<>("redCards"));
 
-        //Заполняем таблицу данными из файла
-        list = FileFootballPlayers.getInfoPlayers();
-        table_football_players.setItems(list);
-        example.setAll(list);
+        // Заполняем таблицу данными из файла
+        footballPlayers = FileFootballPlayers.getInfoPlayers();
+        table_football_players.setItems(footballPlayers);
+        example.setAll(footballPlayers);
 
+        // Заполняем всплывающие списоки и устанавливаем их начальное значение
         comboSort.setItems(FXCollections.observableArrayList("Номер в списке","ФИО","Дата рождения","Кол-во матчей",
                 "Голы","Передачи","Желтые карточки","Красные карточки","Сортировка"));
         comboSort.setValue("Сортировка");
@@ -105,11 +118,15 @@ public class TableController {
                 "Голы","Передачи","Желтые карточки","Красные карточки","Поиск"));
         comboFilter.setValue("Поиск");
     }
+
+    //******************** МЕТОД ВСПЛЫВАЮЩЕГО СПИСКА "Сортировка" ДЛЯ СОРТИРОВКИ ТАБЛИЦЫ ********************
     @FXML
     public void sortPlayers(){
+        // Получаем номер выбранного элемента в comboSort
         int call = comboSort.getSelectionModel().getSelectedIndex();
-        int length = list.size();
+        int length = footballPlayers.size();
 
+        // Исходя из номера элемента, проводится сортировка
         if(call == 0) sortNumber(length);
         if(call == 1) sortFullName(length);
         if(call == 2) sortDateOfBirth(length);
@@ -123,14 +140,19 @@ public class TableController {
             comboSort.setValue("Сортировка");
         }
     }
+
+    //******************** МЕТОД КНОПКИ "Поиск" ДЛЯ ПОИСКА ПО ЛЮБОМУ ПАРАМЕТРУ ********************
     @FXML
     public void filterPlayers(){
+        // Получаем номер выбранного элемента в comboFilter
         int call = comboFilter.getSelectionModel().getSelectedIndex();
+        // Создаем буферный список для заполнения его элементами которые содержат строку из поиска
         ObservableList<FootballPlayers> prompt = FXCollections.observableArrayList();
         String str2;
-
+        // Если мы не ввели пустую строку без пробелов,то выполняем поиск по выбранному элементу в comboFilter
+        // Иначе всплывает диалоговое окно "Пустой поиск"
         if(!findFilter.getText().trim().isEmpty()) {
-            list.setAll(example);
+            footballPlayers.setAll(example);
             str2 = findFilter.getText();
 
             if (call == 0) findNumber(str2, prompt);
@@ -143,21 +165,25 @@ public class TableController {
             if (call == 7) findRedCards(str2, prompt);
             if (call != 8) stopButton.setVisible(true);
         } else {
-            list.setAll(example);
+            footballPlayers.setAll(example);
         }
 
     }
+
+    //******************** МЕТОД КНОПКИ "Остановить поиск" ДЛЯ ПРЕКРАЩЕНИЯ ПОИСКА ********************
+    // Метод прекращает поиск и устанавливает начальное значение comboFilter
     @FXML
     public void stopFilter(){
         stopButton.setVisible(false);
         findFilter.clear();
         comboFilter.setValue("Поиск");
-        list.setAll(example);
+        footballPlayers.setAll(example);
     }
-    //Метод добавления новых игроков в таблицу
+    //******************** МЕТОД КНОПКИ "Добавить" ДЛЯ ДОБАВЛЕНИЯ НОВОГО ИГРОКА В ТАБЛИЦУ ********************
     @FXML
     public void addPlayers() {
         int x = example.size()+1;
+        // Если ввод корректен, то мы устанавливаем значения для игрока из текстовых полей
         if(isRightInput()){
             FootballPlayers fp = new FootballPlayers();
             fp.setNumber(x);
@@ -168,14 +194,18 @@ public class TableController {
             fp.setAssists(Integer.parseInt(assists_field.getText()));
             fp.setYellowCards(Integer.parseInt(yellowCards_field.getText()));
             fp.setRedCards(Integer.parseInt(redCards_field.getText()));
+            // Очищаем поля ввода
             clearAll();
+            // Добавляем
             example.add(fp);
             saveButton.setDisable(false);
         }
     }
-    //Метод проверки введеных данных в текстовые поля
+    //******************** МЕТОД ПРОВЕРКИ ВВОДИМЫХ ДАННЫХ ********************
     private boolean isRightInput(){
+        // Создаем строку, которая будет содержать текст ошибки ввода
         String sms = "";
+        // Проверяем поля на заполненость
         if(fullName_field == null || fullName_field.getText().trim().isEmpty()) sms += "Пустое поле ФИО\n";
         if(dateOfBirth_field == null || dateOfBirth_field.getText().trim().isEmpty()) sms += "Пустое поле даты рождения\n";
         else{
@@ -188,6 +218,7 @@ public class TableController {
         if(assists_field.getText().trim().isEmpty()) sms += "Пустое поле голевых передач\n";
         if(yellowCards_field.getText().trim().isEmpty()) sms += "Пустое поле желтых карточек\n";
         if(redCards_field.getText().trim().isEmpty()) sms += "Пустое поле красных карточек\n";
+        // Проверяем поля на числовой положительный ввод
         try {
             int a = Integer.parseInt(matches_field.getText());
             int b = Integer.parseInt(goals_field.getText());
@@ -200,6 +231,8 @@ public class TableController {
         } catch (NegativeException e){
             sms += "Отрицательный ввод\n";
         }
+        // Если после всей проверки строка пуста, значит ни одной ошибки нет и мутод возвращает значение true
+        // Иначе всплывает диалоговое окно со всеми нашими ошибками и метод возвращает значение false
         if(sms.length() == 0){
             return true;
         }else{
@@ -211,12 +244,18 @@ public class TableController {
             return false;
         }
     }
+
+    //******************** МЕТОД КНОПКИ "Изменить" ДЛЯ РЕДАКТИРОВАНИЯ ДАННЫХ ********************
     @FXML
     public void changePlayers(){
+        // Если не выбрана ни одна строка в таблице, то всплывает диалоговое окно "Пустой выбор"
+        // Если же какая-то строка выбрана то заполняем текстовые поля значениями выбранной строки
         if(!table_football_players.getSelectionModel().isEmpty()) {
+            // Запрещаем добавление, удаление и сохранение во время редактирования
             addButton.setDisable(true);
             deleteButton.setDisable(true);
             saveButton.setDisable(true);
+            // Заполняем поля
             FootballPlayers fp = table_football_players.getSelectionModel().getSelectedItem();
             fullName_field.setText(fp.getFullName());
             dateOfBirth_field.setText(Date.form(fp.getDateOfBirth()));
@@ -227,6 +266,7 @@ public class TableController {
             redCards_field.setText(String.valueOf(fp.getRedCards()));
             saveChangesButton.setVisible(true);
         } else {
+            // Диалоговое окно "Пустой выбор"
             Alert noSelect = new Alert(Alert.AlertType.WARNING);
             noSelect.setHeaderText("Пустой выбор");
             noSelect.setTitle("Предупреждение");
@@ -234,8 +274,11 @@ public class TableController {
             noSelect.showAndWait();
         }
     }
+
+    //******************** МЕТОД КНОПКИ "Сохранение изменений" ДЛЯ СОХРАНЕНИЯ ОТРЕДАКТИРОВАННЫХ ДАННЫХ ********************
     @FXML
     public void saveChanges(){
+        // Если ввод корректен, то мы устанавливаем значения для игрока из текстовых полей
         if(isRightInput()){
             int call = table_football_players.getSelectionModel().getSelectedItem().getNumber();
             int num = table_football_players.getSelectionModel().getSelectedIndex();
@@ -248,9 +291,12 @@ public class TableController {
             fp.setAssists(Integer.parseInt(assists_field.getText()));
             fp.setYellowCards(Integer.parseInt(yellowCards_field.getText()));
             fp.setRedCards(Integer.parseInt(redCards_field.getText()));
+            // Очищаем поля для ввода
             clearAll();
-            list.set(num, fp);
-            sortNumber(list.size());
+            // Заменяем выбранную строку на отредактированную
+            footballPlayers.set(num, fp);
+            // Сортируем таблицу по номеру игрока в таблице
+            sortNumber(footballPlayers.size());
             example.set(call-1,fp);
             saveChangesButton.setVisible(false);
             addButton.setDisable(false);
@@ -258,7 +304,8 @@ public class TableController {
             saveButton.setDisable(false);
         }
     }
-    //Метод очистки полей
+    //************************** МЕТОД КНОПКИ "Очистить" ДЛЯ ОЧИСТКИ ВСЕХ ПОЛЕЙ ВВОДА **************************
+    // Метод очищает все поля для ввода
     @FXML
     public void clearAll(){
         fullName_field.clear();
@@ -269,15 +316,16 @@ public class TableController {
         yellowCards_field.clear();
         redCards_field.clear();
     }
-    //Метод сохранения таблицы в файл
+    //************************** МЕТОД КНОПКИ "Сохранить" ДЛЯ СОХРАНЕНИЯ ТАБЛИЦЫ В ФАЙЛ **************************
     @FXML
     public void saveAll(){
         FileFootballPlayers.setInfoPlayers(example);
         saveButton.setDisable(true);
     }
-    //Метод удаления игрока из таблицы
+    //************************** МЕТОД КНОПКИ "Удалить" УДАЛЕНИЯ ИГРОКОВ ИЗ ТАБЛИЦЫ **************************
     @FXML
     public void delPlayers() {
+        // Проверяем выбрана ли строка. Если нет, то всплывает диалоговое окно "Пустой выбор"
         if (table_football_players.getSelectionModel().isEmpty()) {
             Alert noSelect = new Alert(Alert.AlertType.WARNING);
             noSelect.setHeaderText("Пустой выбор");
@@ -285,12 +333,14 @@ public class TableController {
             noSelect.setContentText("Вы ничего не выбрали для удаления");
             noSelect.showAndWait();
         } else {
+            // Иначе диалоговое окно "Подтверждение удаления"
             Alert delAlert = new Alert(Alert.AlertType.WARNING, "Warning", ButtonType.OK, ButtonType.CANCEL);
             delAlert.setTitle("Предупреждение");
             delAlert.setHeaderText("Удаление данных");
             delAlert.setContentText("Вы уверены что хотите удалить эти данные?\nДанные исчезнут");
             delAlert.showAndWait();
 
+            // Если подтверждаем, то игрок удаляется из таблицы и номера игроков которые больше удаленного уменьшаются на один
             if (delAlert.getResult() == ButtonType.OK) {
                 FootballPlayers fp = table_football_players.getSelectionModel().getSelectedItem();
                 int num = table_football_players.getSelectionModel().getSelectedItem().getNumber();
@@ -304,17 +354,22 @@ public class TableController {
                 stopButton.setVisible(false);
                 comboFilter.setValue("Поиск");
                 comboSort.setValue("Сортировка");
-                list.removeAll(fp);
+                footballPlayers.removeAll(fp);
                 example.removeAll(fp);
-                list.setAll(example);
+                footballPlayers.setAll(example);
                 saveButton.setDisable(false);
             } else delAlert.close();
+            // Иначе закрывается диалоговое окно "Подтверждение удаления" и ничего не происходит
         }
     }
 
+    //****************** МЕТОД КНОПКИ "Индивидуальное задание" ДЛЯ ЗАПУСКА ОКНА ИНДИВИДУАЛЬНОГО ЗАДАНИЯ ******************
     @FXML
     public void individualTask(){
+        // Проверяем сохранена ли таблица, если да, то открываем окно индивидуального задания
+        // Иначе всплывает диалоговое окно "Потеря данных"
         if(saveButton.isDisable()) {
+            // Запуск окна индивидуального задания
             individualButton.getScene().getWindow().hide();
             FXMLLoader load = new FXMLLoader();
             load.setLocation(getClass().getResource("result.fxml"));
@@ -330,6 +385,7 @@ public class TableController {
             stage.setScene(new Scene(pr));
             stage.show();
         } else {
+            // Диалоговое окно "Потеря данных"
             Alert saveTrouble = new Alert(Alert.AlertType.WARNING,"Warning", ButtonType.OK, ButtonType.CANCEL);
             saveTrouble.setTitle("Потеря данных");
             saveTrouble.setHeaderText("Внимание!");
@@ -337,6 +393,7 @@ public class TableController {
                     "\nХотите продолжить с данными последнего сохранения?");
             saveTrouble.showAndWait();
             if(saveTrouble.getResult() == ButtonType.OK){
+                // Если нажать на кнопку "OK", то индивидуальное задание выполниться для последнего сохранения
                 individualButton.getScene().getWindow().hide();
                 saveButton.setDisable(true);
                 FXMLLoader load = new FXMLLoader();
@@ -353,35 +410,37 @@ public class TableController {
                 stage.setScene(new Scene(pr));
                 stage.show();
             } else saveTrouble.close();
+            // Иначе, диалоговое окно закрывается
         }
     }
-
+    //************************** МЕТОДЫ ВСЕХ СОРТИРОВОК **************************
+    // Все сортировки представлены сортирвокой "пузырьком"
     public void sortNumber(int length){
         FootballPlayers fp1, fp2;
         for(int i = 0; i + 1 < length ; i++){
             for(int j = 0; j + 1 < length - i; j++){
-                fp1 = list.get(j + 1);
-                fp2 = list.get(j);
+                fp1 = footballPlayers.get(j + 1);
+                fp2 = footballPlayers.get(j);
                 if(fp1.getNumber() < fp2.getNumber()){
-                    list.set(j + 1, fp2);
-                    list.set(j, fp1);
+                    footballPlayers.set(j + 1, fp2);
+                    footballPlayers.set(j, fp1);
                 }
             }
         }
     }
-//        В Java compareTo() получает значение 0, если аргумент
-//        является строкой лексически равной данной строке; значение меньше 0,
-//        если аргумент является строкой лексически большей, чем сравниваемая строка;
-//        и значение больше 0, если аргумент является строкой лексически меньшей этой строки.
+    //        В Java compareTo() получает значение 0, если аргумент
+    //        является строкой лексически равной данной строке; значение меньше 0,
+    //        если аргумент является строкой лексически большей, чем сравниваемая строка;
+    //        и значение больше 0, если аргумент является строкой лексически меньшей этой строки.
     public void sortFullName(int length){
         FootballPlayers fp1, fp2;
         for(int i = 0; i < length - 1 ; i++){
             for(int j = i + 1; j < length; j++) {
-                fp1 = list.get(i);
-                fp2 = list.get(j);
+                fp1 = footballPlayers.get(i);
+                fp2 = footballPlayers.get(j);
                 if(fp1.getFullName().compareTo(fp2.getFullName()) > 0){
-                    list.set(i,fp2);
-                    list.set(j,fp1);
+                    footballPlayers.set(i,fp2);
+                    footballPlayers.set(j,fp1);
                 }
             }
         }
@@ -390,11 +449,11 @@ public class TableController {
         FootballPlayers fp1, fp2;
         for(int i = 0; i + 1 < length ; i++){
             for(int j = 0; j + 1 < length - i; j++){
-                fp1 = list.get(j + 1);
-                fp2 = list.get(j);
+                fp1 = footballPlayers.get(j + 1);
+                fp2 = footballPlayers.get(j);
                 if(fp1.getDateOfBirth().isBefore(fp2.getDateOfBirth())){
-                    list.set(j + 1, fp2);
-                    list.set(j, fp1);
+                    footballPlayers.set(j + 1, fp2);
+                    footballPlayers.set(j, fp1);
                 }
             }
         }
@@ -403,11 +462,11 @@ public class TableController {
         FootballPlayers fp1, fp2;
         for(int i = 0; i + 1 < length ; i++){
             for(int j = 0; j + 1 < length - i; j++){
-                fp1 = list.get(j + 1);
-                fp2 = list.get(j);
+                fp1 = footballPlayers.get(j + 1);
+                fp2 = footballPlayers.get(j);
                 if(fp1.getMatches() < fp2.getMatches()){
-                    list.set(j + 1, fp2);
-                    list.set(j, fp1);
+                    footballPlayers.set(j + 1, fp2);
+                    footballPlayers.set(j, fp1);
                 }
             }
         }
@@ -416,11 +475,11 @@ public class TableController {
         FootballPlayers fp1, fp2;
         for(int i = 0; i + 1 < length ; i++){
             for(int j = 0; j + 1 < length - i; j++){
-                fp1 = list.get(j + 1);
-                fp2 = list.get(j);
+                fp1 = footballPlayers.get(j + 1);
+                fp2 = footballPlayers.get(j);
                 if(fp1.getGoals() < fp2.getGoals()){
-                    list.set(j + 1, fp2);
-                    list.set(j, fp1);
+                    footballPlayers.set(j + 1, fp2);
+                    footballPlayers.set(j, fp1);
                 }
             }
         }
@@ -429,11 +488,11 @@ public class TableController {
         FootballPlayers fp1, fp2;
         for(int i = 0; i + 1 < length ; i++){
             for(int j = 0; j + 1 < length - i; j++){
-                fp1 = list.get(j + 1);
-                fp2 = list.get(j);
+                fp1 = footballPlayers.get(j + 1);
+                fp2 = footballPlayers.get(j);
                 if(fp1.getAssists() < fp2.getAssists()){
-                    list.set(j + 1, fp2);
-                    list.set(j, fp1);
+                    footballPlayers.set(j + 1, fp2);
+                    footballPlayers.set(j, fp1);
                 }
             }
         }
@@ -442,11 +501,11 @@ public class TableController {
         FootballPlayers fp1, fp2;
         for(int i = 0; i + 1 < length ; i++){
             for(int j = 0; j + 1 < length - i; j++){
-                fp1 = list.get(j + 1);
-                fp2 = list.get(j);
+                fp1 = footballPlayers.get(j + 1);
+                fp2 = footballPlayers.get(j);
                 if(fp1.getYellowCards() < fp2.getYellowCards()){
-                    list.set(j + 1, fp2);
-                    list.set(j, fp1);
+                    footballPlayers.set(j + 1, fp2);
+                    footballPlayers.set(j, fp1);
                 }
             }
         }
@@ -455,93 +514,98 @@ public class TableController {
         FootballPlayers fp1, fp2;
         for(int i = 0; i + 1 < length ; i++){
             for(int j = 0; j + 1 < length - i; j++){
-                fp1 = list.get(j + 1);
-                fp2 = list.get(j);
+                fp1 = footballPlayers.get(j + 1);
+                fp2 = footballPlayers.get(j);
                 if(fp1.getRedCards() < fp2.getRedCards()){
-                    list.set(j + 1, fp2);
-                    list.set(j, fp1);
+                    footballPlayers.set(j + 1, fp2);
+                    footballPlayers.set(j, fp1);
                 }
             }
         }
     }
+
+    //************************** МЕТОДЫ ВСЕХ ПОИСКОВ **************************
+    // Проверяем содержание введенной строки
+    // Если строка поиска содержится в строке игрока, то добавляем этого игрока в буферный список
+    // После цикла заполняем список footballPlayers значениями буферного списка prompt
     public void findNumber(String str2, ObservableList<FootballPlayers> prompt){
         String str1;
-        for (FootballPlayers fp : list) {
+        for (FootballPlayers fp : footballPlayers) {
             str1 = String.valueOf(fp.getNumber());
             if (str1.contains(str2)) {
                 prompt.add(fp);
             }
         }
-        list.setAll(prompt);
+        footballPlayers.setAll(prompt);
     }
     public void findFullName(String str2, ObservableList<FootballPlayers> prompt){
         String str1;
-        for (FootballPlayers fp : list) {
+        for (FootballPlayers fp : footballPlayers) {
             str1 = fp.getFullName().toUpperCase();
             if (str1.contains(str2.toUpperCase())) {
                 prompt.add(fp);
             }
         }
-        list.setAll(prompt);
+        footballPlayers.setAll(prompt);
     }
     public void findDateOfBirth(String str2, ObservableList<FootballPlayers> prompt){
         String str1;
-        for (FootballPlayers fp : list) {
+        for (FootballPlayers fp : footballPlayers) {
             str1 = Date.form(fp.getDateOfBirth());
             if (str1.contains(str2)) {
                 prompt.add(fp);
             }
         }
-        list.setAll(prompt);
+        footballPlayers.setAll(prompt);
     }
     public void findMatches(String str2, ObservableList<FootballPlayers> prompt){
         String str1;
-        for (FootballPlayers fp : list) {
+        for (FootballPlayers fp : footballPlayers) {
             str1 = String.valueOf(fp.getMatches());
             if (str1.contains(str2)) {
                 prompt.add(fp);
             }
         }
-        list.setAll(prompt);
+        footballPlayers.setAll(prompt);
     }
     public void findGoals(String str2, ObservableList<FootballPlayers> prompt){
         String str1;
-        for (FootballPlayers fp : list) {
+        for (FootballPlayers fp : footballPlayers) {
             str1 = String.valueOf(fp.getGoals());
             if (str1.contains(str2)) {
                 prompt.add(fp);
             }
         }
-        list.setAll(prompt);
+        footballPlayers.setAll(prompt);
     }
     public void findAssists(String str2, ObservableList<FootballPlayers> prompt){
         String str1;
-        for (FootballPlayers fp : list) {
+        for (FootballPlayers fp : footballPlayers) {
             str1 = String.valueOf(fp.getAssists());
             if (str1.contains(str2)) {
                 prompt.add(fp);
             }
         }
-        list.setAll(prompt);
+        footballPlayers.setAll(prompt);
     }
     public void findYellowCards(String str2, ObservableList<FootballPlayers> prompt){
         String str1;
-        for (FootballPlayers fp : list) {
+        for (FootballPlayers fp : footballPlayers) {
             str1 = String.valueOf(fp.getYellowCards());
             if (str1.contains(str2)) {
                 prompt.add(fp);
             }
         }
-        list.setAll(prompt);
+        footballPlayers.setAll(prompt);
     }
     public void findRedCards(String str2, ObservableList<FootballPlayers> prompt){
         String str1;
-        for (FootballPlayers fp : list) {
+        for (FootballPlayers fp : footballPlayers) {
             str1 = String.valueOf(fp.getRedCards());
             if (str1.contains(str2)) {
                 prompt.add(fp);
             }
         }
-        list.setAll(prompt);
+        footballPlayers.setAll(prompt);
     }
 }
