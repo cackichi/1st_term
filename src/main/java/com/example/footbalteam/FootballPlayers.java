@@ -3,8 +3,6 @@ package com.example.footbalteam;
 import java.time.LocalDate;
 
 public class FootballPlayers {
-    //Это JavaFX-свойства
-    //Изменение значения любого поля автоматически приводит к изменению значения в ячейке таблицы
     private int number ,matches, goals, assists, redCards, yellowCards, result;
     private String fullName;
     private LocalDate dateOfBirth;
@@ -15,6 +13,7 @@ public class FootballPlayers {
         this.goals = goals;
         this.assists = assist;
         this.yellowCards = yellowCards;
+
         this.redCards = redCards;
         this.fullName = fullName;
         this.dateOfBirth = dateOfBirth;

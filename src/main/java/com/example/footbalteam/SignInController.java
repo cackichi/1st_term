@@ -21,17 +21,17 @@ public class SignInController {
     @FXML
     private Button signInButton;
 
-    private ObservableList<Accounts> list;
+    private ObservableList<Accounts> accounts;
 
     @FXML
     void initialize() {
-        list = FileFootballPlayers.getInfoAccounts();
+        accounts = FileFootballPlayers.getInfoAccounts();
     }
     @FXML
     public void signIn() {
-        int length = list.size();
+        int length = accounts.size();
         int call = 0;
-        for (Accounts accounts : list) {
+        for (Accounts accounts : accounts) {
             if (login_field.getText().equals(accounts.getLogin()) && password_field.getText().equals(accounts.getPassword())) {
                 signInButton.getScene().getWindow().hide();
                 FXMLLoader load = new FXMLLoader();
