@@ -167,6 +167,15 @@ public class TableController {
             if (call == 6) findYellowCards(str2, prompt);
             if (call == 7) findRedCards(str2, prompt);
             if (call != 8) stopButton.setVisible(true);
+
+            if(footballPlayers.isEmpty()){
+                footballPlayers.setAll(example);
+                Alert filterAl = new Alert(Alert.AlertType.INFORMATION);
+                filterAl.setTitle("Поиск");
+                filterAl.setContentText("По результату поиска ничего не найдено");
+                filterAl.setHeaderText("Информация");
+                filterAl.showAndWait();
+            }
         } else {
             footballPlayers.setAll(example);
         }
@@ -201,7 +210,13 @@ public class TableController {
             clearAll();
             // Добавляем
             example.add(fp);
+            footballPlayers.add(fp);
             saveButton.setDisable(false);
+            Alert addAlert = new Alert(Alert.AlertType.INFORMATION);
+            addAlert.setTitle("Добавление игрока");
+            addAlert.setHeaderText("Информация");
+            addAlert.setContentText("Игрок добавлен в таблицу");
+            addAlert.showAndWait();
         }
     }
     //******************** МЕТОД ПРОВЕРКИ ВВОДИМЫХ ДАННЫХ ********************
@@ -301,6 +316,13 @@ public class TableController {
             // Сортируем таблицу по номеру игрока в таблице
             sortNumber(footballPlayers.size());
             example.set(call-1,fp);
+
+            Alert saveAl = new Alert(Alert.AlertType.INFORMATION);
+            saveAl.setTitle("Изменение данных");
+            saveAl.setHeaderText("Информация");
+            saveAl.setContentText("Данные изменены");
+            saveAl.showAndWait();
+
             saveChangesButton.setVisible(false);
             addButton.setDisable(false);
             deleteButton.setDisable(false);
@@ -361,6 +383,13 @@ public class TableController {
                 example.removeAll(fp);
                 footballPlayers.setAll(example);
                 saveButton.setDisable(false);
+
+                Alert delAl = new Alert(Alert.AlertType.INFORMATION);
+                delAl.setTitle("Удаление игрока");
+                delAl.setHeaderText("Информация");
+                delAl.setContentText("Игрок удален");
+                delAl.showAndWait();
+
             } else delAlert.close();
             // Иначе закрывается диалоговое окно "Подтверждение удаления" и ничего не происходит
         }
@@ -388,19 +417,7 @@ public class TableController {
             stage.setScene(new Scene(pr));
             stage.show();
 
-            stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-                @Override
-                public void handle(WindowEvent windowEvent) {
-                    Alert closeAlert = new Alert(Alert.AlertType.WARNING, "Внимание", ButtonType.OK, ButtonType.CANCEL);
-                    closeAlert.setTitle("Внимание!");
-                    closeAlert.setHeaderText("Закрытие приложения");
-                    closeAlert.setContentText("Вы действительно хотите закрыть приложение?");
-                    Optional<ButtonType> result = closeAlert.showAndWait();
-                    if(result.get() == ButtonType.OK){
-                        stage.close();
-                    } else windowEvent.consume();
-                }
-            } );
+            Main.stop(stage);
         } else {
             // Диалоговое окно "Потеря данных"
             Alert saveTrouble = new Alert(Alert.AlertType.WARNING,"Warning", ButtonType.OK, ButtonType.CANCEL);

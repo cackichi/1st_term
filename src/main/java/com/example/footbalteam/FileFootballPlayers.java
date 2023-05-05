@@ -106,9 +106,13 @@ public class FileFootballPlayers{
                     }
                 }
             }
+
+            sortAndDelete(list_result);
+        }
+
+        public static void sortAndDelete(ObservableList<FootballPlayers> list_result){
             FootballPlayers fp1, fp2;
             int length = list_result.size();
-
             for(int i = 0; i + 1 < length ; i++){
                 for(int j = 0; j + 1 < length - i; j++){
                     fp1 = list_result.get(j + 1);

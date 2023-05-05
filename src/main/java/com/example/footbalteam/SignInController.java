@@ -51,19 +51,7 @@ public class SignInController {
                 stage.setScene(new Scene(pr));
                 stage.show();
 
-                stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-                    @Override
-                    public void handle(WindowEvent windowEvent) {
-                        Alert closeAlert = new Alert(Alert.AlertType.WARNING, "Внимание", ButtonType.OK, ButtonType.CANCEL);
-                        closeAlert.setTitle("Внимание!");
-                        closeAlert.setHeaderText("Закрытие приложения");
-                        closeAlert.setContentText("Вы действительно хотите закрыть приложение?");
-                        Optional<ButtonType> result = closeAlert.showAndWait();
-                        if(result.get() == ButtonType.OK){
-                            stage.close();
-                        } else windowEvent.consume();
-                    }
-                } );
+                Main.stop(stage);
             } else call++;
         }
         if(call == length){
@@ -90,18 +78,6 @@ public class SignInController {
         stage.setScene(new Scene(pr));
         stage.show();
 
-        stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-            @Override
-            public void handle(WindowEvent windowEvent) {
-                Alert closeAlert = new Alert(Alert.AlertType.WARNING, "Внимание", ButtonType.OK, ButtonType.CANCEL);
-                closeAlert.setTitle("Внимание!");
-                closeAlert.setHeaderText("Закрытие приложения");
-                closeAlert.setContentText("Вы действительно хотите закрыть приложение?");
-                Optional<ButtonType> result = closeAlert.showAndWait();
-                if(result.get() == ButtonType.OK){
-                    stage.close();
-                } else windowEvent.consume();
-            }
-        } );
+        Main.stop(stage);
     }
 }
