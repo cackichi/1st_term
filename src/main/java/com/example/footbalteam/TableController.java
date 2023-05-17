@@ -164,7 +164,14 @@ public class TableController {
             if (call == 6) findYellowCards(str2, prompt);
             if (call == 7) findRedCards(str2, prompt);
             if (call != 8) stopButton.setVisible(true);
-
+            if (footballPlayers.isEmpty()) {
+                footballPlayers.setAll(example);
+                Alert filterAl = new Alert(Alert.AlertType.INFORMATION);
+                filterAl.setTitle("Поиск");
+                filterAl.setContentText("По результату поиска ничего не найдено");
+                filterAl.setHeaderText("Информация");
+                filterAl.showAndWait();
+            }
         } else {
             if(call != 8) {
                 footballPlayers.setAll(example);

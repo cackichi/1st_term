@@ -13,7 +13,7 @@ public class FileFootballPlayers {
     public static ObservableList<FootballPlayers> getInfoPlayers() {
         ObservableList<FootballPlayers> table = FXCollections.observableArrayList();
         // Путь к файлу игроков
-        String file = "E:\\FootballTeam\\FootbalTeam\\src\\main\\java\\com\\example\\footbalteam\\table.csv";
+        String file = "E:\\FootballTeam\\FootbalTeam\\src\\main\\java\\com\\example\\footbalteam\\table.TXT";
         BufferedReader br = null;
         String line;
         String splitSym = ";";
@@ -43,7 +43,7 @@ public class FileFootballPlayers {
     //Метод сохранения таблицы в файл
     public static void setInfoPlayers(ObservableList<FootballPlayers> table) {
         // Путь к файлу игроеов
-        String file = "E:\\FootballTeam\\FootbalTeam\\src\\main\\java\\com\\example\\footbalteam\\table.csv";
+        String file = "E:\\FootballTeam\\FootbalTeam\\src\\main\\java\\com\\example\\footbalteam\\table.TXT";
         try {
             BufferedWriter bw = new BufferedWriter(new FileWriter(file));
             // Записываем игроков в файл
@@ -92,7 +92,7 @@ public class FileFootballPlayers {
     // Этот метод считывает информацию из файла игроков для заполнения таблиц результативности и оштрафованных игроков
     public static void getPlayersIndividual(ObservableList<FootballPlayers> list_result, ObservableList<FootballPlayers> list_red_cards) {
         // Файл игроков
-        String file = "E:\\FootballTeam\\FootbalTeam\\src\\main\\java\\com\\example\\footbalteam\\table.csv";
+        String file = "E:\\FootballTeam\\FootbalTeam\\src\\main\\java\\com\\example\\footbalteam\\table.TXT";
         BufferedReader br = null;
         String line;
         String splitSym = ";";
