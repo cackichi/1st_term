@@ -18,7 +18,7 @@ public class Main extends Application {
         FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("auth.fxml"));
 
         File file1 = new File("E:\\FootballTeam\\FootbalTeam\\src\\main\\java\\com\\example\\footbalteam\\accounts.csv");
-        File file2 = new File("E:\\FootballTeam\\FootbalTeam\\src\\main\\java\\com\\example\\footbalteam\\table.csv");
+        File file2 = new File("E:\\FootballTeam\\FootbalTeam\\src\\main\\java\\com\\example\\footbalteam\\table.TXT");
         if(file1.createNewFile()) {
             BufferedWriter bw1 = new BufferedWriter(new FileWriter(file1));
             bw1.write("admin;admin");
